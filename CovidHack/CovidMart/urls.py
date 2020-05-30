@@ -20,6 +20,7 @@ urlpatterns = [
     path('pickup/medicine/',views.medicine,name="medicine1"),
     path('pickup/cereals_and_pulses/',views.cereals_and_pulses,name="cereals_and_pulses1"),
     path('delivery/amazon/',views.amazon,name="amazon"),
-    path('delivery/flipkart/',views.flipkart,name="flipkart")
+    path('delivery/flipkart/',views.flipkart,name="flipkart"),
+    path('logout/',views.logout_view,name="logout")
 
 ]

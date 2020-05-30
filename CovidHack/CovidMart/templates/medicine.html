@@ -6,19 +6,22 @@
 <div class="container" align="center">
 
     <div class="column">
-        <h1>Medicinal Products</h1>
+        <h1 style="color: darkcyan;">Medicinal Products</h1>
         <form action="/itemForm" method="POST">
             {% csrf_token %}
-            {% for item in item_list %}
-            <div class="col s3">
-                <p class="range-field">
-                    <a style="font-size: medium;">{{item.itemName}}</a>
-                    0<input type="range" id="{{item.itemName}}" name="{{item.itemName}}" min="0" max="5" style="width: 100px;"/>5
-                </p>    
+            <div class="card" style="width: 30%;">
+                {% for item in item_list %}
+                <div class="col s3">
+                    <p class="range-field">
+                        <a style="font-size: medium;">{{item.itemName}}</a>
+                        0<input type="range" value="0" id="{{item.itemName}}" name="{{item.itemName}}" min="0" max="5" style="width: 100px;"/>5
+                    </p>    
+                </div>
+                {% endfor %}
+    
             </div>
-            {% endfor %}
             <input type="hidden" name="type" value="Medicine">
-            <button type="submit">Submit</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </form>       
 
     </div>

@@ -1,10 +1,24 @@
-{% extends 'index.html' %}
+{% extends 'base.html' %}
+
+{% block title %}Registration{% endblock %}
 
 {% block content %}
-  <h2>Register</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-  </form>
+<div class="container" align="center">
+  
+  <div class="section"></div>
+
+  <h5 class="indigo-text">Registration</h5>
+  <div class="container">
+    <div class="z-depth-1 grey lighten-4 row" style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class='row'>
+          <button type='submit' name='btn_register' class='col s12 btn btn-large waves-effect blue'>Register</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+</div>
 {% endblock %}

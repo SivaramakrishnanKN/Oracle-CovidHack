@@ -1,4 +1,4 @@
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -8,9 +8,15 @@ import math
 from .models import Customer, Service, Item
 
 def index(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
     name = request.user.username
+
     return render(request, "index.html", {'name':name})
 
+def logout_view(request):
+    logout(request)
+    return redirect('index')
 
 def signup(request):
     if request.method == 'POST':
@@ -31,6 +37,8 @@ def map(request):
 
      
 def pickup(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
     item_list = Item.objects.all()
     items = {}
     count = 0
@@ -41,6 +49,8 @@ def pickup(request):
     return render(request,'pickup.html',{'item_list':item_list})
 
 def itemForm(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
     itemType = str(request.POST.get('type'))
     user = request.user.username
     item_list = Item.objects.all().filter(itemType=itemType)
@@ -59,11 +69,23 @@ def itemForm(request):
     customer  = Customer.objects.filter(name=user)
     # logic
     
-    validShops =  Service.objects.filter(shopType = itemType).filter(zoneID=customer[0].zoneID).filter(numCust__lt=3).order_by('slotID')
+    validShops =  Service.objects.filter(shopType = itemType).filter(numCust__lt=3).order_by('slotID')
     
+    ##
+
+    if customer[0].zone == 'Orange':
+        validShops = Service.Objects.filter(shopType = itemType).filter(zone='Orange').filter(numCust__lt=3)
+        validShops = validShops.append(Service.Objects.filter(shopType = itemType).filter(zone='Red').filter(numCust__lt=3))
+    elif customer[0].zone == 'Red':
+        validShops =  Service.objects.filter(shopType = itemType).filter(zone='Red').filter(zoneID=customer[0].zoneID).filter(numCust__lt=3).order_by('slotID')
+
+    if request.session['site'] == 'Amazon' or request.session['site'] == 'Flipkart':
+        validShops = Service.objects.filter(shopType = itemType)
+
+    ##
     if(len(validShops) == 0):
         slot = "Try again later"
-        shopName="No shops found"
+        shopName=""
         return render(request, 'output.html', {'name':user, 'shop_name':shopName, 'slot_time':slot, 'itemCount': itemCount, 'total':total, 'site':site})
     shopName = validShops[0].name
     _slot = validShops[0].slotID
@@ -82,9 +104,12 @@ def itemForm(request):
         _slot="11AM"
     else:
         slot="12AM"
+
     return render(request, 'output.html', {'name':user, 'shop_name':shopName, 'slot_time':_slot, 'itemCount': itemCount, 'total':total, 'site':site})
 
 def delivery(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
     item_list = Item.objects.all()
     items = {}
     count = 0
@@ -140,27 +165,39 @@ def registerCustomer(request):
 
 
 def fruits_and_veg(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
     item_list = Item.objects.all().filter(itemType='Fruits')
     return render(request, 'fruitsVeg.html',{'item_list':item_list})
 
 def dairy(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
     item_list = Item.objects.all().filter(itemType='Dairy')
     return render(request, 'dairy.html',{'item_list':item_list})
 
 def medicine(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
     item_list = Item.objects.all().filter(itemType='Medicine')
     return render(request, 'medicine.html',{'item_list':item_list})
 
 def cereals_and_pulses(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
     item_list = Item.objects.all().filter(itemType='Cereals')
     return render(request, 'cereals.html',{'item_list':item_list})
 
 def amazon(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
     request.session['site'] = 'Amazon'
     request.session['coun'] = 1
     return redirect('/pickup')
 
 def flipkart(request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
     request.session['site'] = 'Flipkart'
     request.session['coun'] = 1
     return redirect('/pickup')

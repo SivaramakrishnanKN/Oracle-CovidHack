@@ -13,19 +13,20 @@
  
     <body>
         <div class="container" align="center">
-            <h1>Choose the Department</h1>
+            <h1 style="color: darkcyan;">Choose the Department</h1>
             <div class="row">
+                
                 <div class="col s3">
-                    <a class="carousel-item" href="dairy"><img src="/static/images/dairy.png" style="width:256px;height:256px;"></a>
+                    <a class="carousel-item" href="dairy" style="font-size: large;"><img src="/static/images/dairy.jpg" style="width:256px;height:256px;">Milk</a>
                 </div>
                 <div class="col s3">
-                    <a class="carousel-item" href="cereals_and_pulses"><img src="/static/images/cereals_and_pulses.png" style="width:256px;height:256px;"></a>
+                    <a class="carousel-item" href="cereals_and_pulses" style="font-size: large;"><img src="/static/images/cereals_and_pulses.png" style="width:256px;height:256px;">Cereals And Pulses</a>
                 </div>
                 <div class="col s3">
-                    <a class="carousel-item" href="medicine"><img src="/static/images/medicine.png" style="width:256px;height:256px;"></a>
+                    <a class="carousel-item" href="medicine" style="font-size: large;"><img src="/static/images/medicine.png" style="width:256px;height:256px;">Medicine</a>
                 </div>
                 <div class="col s3">
-                    <a class="carousel-item" href="fruits_and_veg"><img src="/static/images/fruits_and_veg.png" style="width:256px;height:256px;"></a>
+                    <a class="carousel-item" href="fruits_and_veg" style="font-size: large;"><img src="/static/images/fruits_and_veg.png" style="width:256px;height:256px;">Fruits and Vegetables</a>
                 </div>
             </div>
             
@@ -36,12 +37,7 @@
                 var instances = M.Carousel.init(elems, options);
             });
 
-            // Or with jQuery
-
-            $(document).ready(function(){
-                $('.carousel').carousel();
-            });
-                
+        
         </script>
     </body>
 </html>

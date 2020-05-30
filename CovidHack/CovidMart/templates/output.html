@@ -12,13 +12,34 @@
     </head>
     <body>
         <div class="container" align="center">
-            <h1>Hi {{name}}</h1>
+            <h1 style="color: cadetblue;">Hi {{name}}</h1>
             <h3>This is your {{site}} Order</h3>
-            {% for key,item in itemCount.items %}
-            <li>{{key}} {{item}}</li>
-            {% endfor %}
-            <p>{{shop_name}}</p>
-            <p>{{slot_time}}</p>
+            <div class="card grey "  style="width:30%">
+                <div class="card-content white-text">
+                    <ul style="list-style-type:none;">
+                        {% for key,item in itemCount.items %}
+                        <li>{{key}} x {{item}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-content yellow-text">
+                    <p>Your total is Rs.{{total}}</p>
+                </div>
+            </div>
+            
+            {% if site%}
+                Your Order will be Delivered on   <p>{{slot_time}}</p>
+            {% else %}
+            <p>{% if shop_name %}
+                You can pick up your Order at</p>
+                <p>{{slot_time}}</p>
+                from {{shop_name}}
+                {% else %}
+                No shops available, please try Again Later.
+                {% endif %}
+            {% endif %}
+            
+            </p>
         </div>
     </body>
 </html>
