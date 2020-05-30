@@ -13,9 +13,9 @@
     <body>
         <div class="container" align="center">
             <h1>Hi {{name}}</h1>
-            <h3>This is your Order</h3>
+            <h3>This is your {{site}} Order</h3>
             {% for key,item in itemCount.items %}
-            <li>{{key}}{{item}}</li>
+            <li>{{key}} {{item}}</li>
             {% endfor %}
             <p>{{shop_name}}</p>
             <p>{{slot_time}}</p>

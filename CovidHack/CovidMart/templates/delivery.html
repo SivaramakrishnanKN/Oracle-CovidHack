@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Items List</title>
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        
+    </head>
+ 
+    <body>
+        <div class="container" align="center">
+            <h1>Choose the Department</h1>
+            <div class="row">
+                    <a class="carousel-item" href="amazon"><img src="/static/images/amazon.png" style="width:256px;height:256px;">Amazon</a>
+                    <a class="carousel-item" href="flipkart"><img src="/static/images/flipkart.png" style="width:256px;height:256px;">Flipkart</a>
+            </div>
+            
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var elems = document.querySelectorAll('.carousel');
+                var instances = M.Carousel.init(elems, options);
+            });
+
+            // Or with jQuery
+
+            $(document).ready(function(){
+                $('.carousel').carousel();
+            });
+                
+        </script>
+    </body>
+</html>

@@ -18,6 +18,8 @@ urlpatterns = [
     path('pickup/fruits_and_veg/',views.fruits_and_veg,name="fruits_and_veg1"),
     path('pickup/dairy/',views.dairy,name="dairy1"),
     path('pickup/medicine/',views.medicine,name="medicine1"),
-    path('pickup/cereals_and_pulses/',views.cereals_and_pulses,name="cereals_and_pulses1")
+    path('pickup/cereals_and_pulses/',views.cereals_and_pulses,name="cereals_and_pulses1"),
+    path('delivery/amazon/',views.amazon,name="amazon"),
+    path('delivery/flipkart/',views.flipkart,name="flipkart")
 
 ]

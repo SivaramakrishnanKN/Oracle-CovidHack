@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from .forms import CustomerForm
 from .models import Item 
 import math
-from .models import Customer, Service
+from .models import Customer, Service, Item
 
 def index(request):
     name = request.user.username
@@ -34,37 +34,55 @@ def pickup(request):
     item_list = Item.objects.all()
     items = {}
     count = 0
+    if request.session.get('coun') == 1:
+        request.session['coun'] = 0
+    else:
+        request.session['site']=''
     return render(request,'pickup.html',{'item_list':item_list})
 
 def itemForm(request):
     itemType = str(request.POST.get('type'))
     user = request.user.username
     item_list = Item.objects.all().filter(itemType=itemType)
-    
+
+    site = request.session.get('site')
+  
+    total = 0.0
+
     itemCount = {}
     for key in item_list:
         itemCount[key.itemName] = request.POST.get(key.itemName) 
+        price = Item.objects.all().filter(itemName=key.itemName)[0].price
+        total+=int(itemCount[key.itemName])*price
         print(key.itemName, request.POST.get(key.itemName))
 
     customer  = Customer.objects.filter(name=user)
     # logic
-    shopName = ""
-    slot = 1
+    
     validShops =  Service.objects.filter(shopType = itemType).filter(zoneID=customer[0].zoneID).filter(numCust__lt=3).order_by('slotID')
+    
     if(len(validShops) == 0):
         slot = "Try again later"
         shopName="No shops found"
-        return render(request, 'output.html', {'name':user, 'shop_name':shopName, 'slot_time':slot, 'itemCount': itemCount})
-    dist = math.inf
+        return render(request, 'output.html', {'name':user, 'shop_name':shopName, 'slot_time':slot, 'itemCount': itemCount, 'total':total, 'site':site})
+    shopName = validShops[0].name
+    _slot = validShops[0].slotID
+    dist = math.sqrt((customer[0].lon - validShops[0].lon)**2 + (customer[0].lat - validShops[0].lat)**2)
     for shop in validShops:
-        d = math.sqrt((customer[0].lon - shop.lon)**2 + (customer[0].lan - shop.lan)**2)
+        d = math.sqrt((customer[0].lon - shop.lon)**2 + (customer[0].lat - shop.lat)**2)
         if(dist < d):
             dist = d
             shopName = shop.name
-            slot = shop.slotID
-    selectedshop = Service.objects.filter(name=shopName).filter(slot=slot)
-    selectedshop.numCust = selectedshop.numCust + 1
-    return render(request, 'output.html', {'name':user, 'shop_name':shopName, 'slot_time':slot, 'itemCount': itemCount})
+            _slot = shop.slotID
+    selectedshop = Service.objects.filter(name=shopName).filter(slotID=_slot)
+    selectedshop[0].numCust = selectedshop[0].numCust + 1
+    if _slot==1:
+        _slot="10AM"
+    elif _slot==2:
+        _slot="11AM"
+    else:
+        slot="12AM"
+    return render(request, 'output.html', {'name':user, 'shop_name':shopName, 'slot_time':_slot, 'itemCount': itemCount, 'total':total, 'site':site})
 
 def delivery(request):
     item_list = Item.objects.all()
@@ -136,3 +154,13 @@ def medicine(request):
 def cereals_and_pulses(request):
     item_list = Item.objects.all().filter(itemType='Cereals')
     return render(request, 'cereals.html',{'item_list':item_list})
+
+def amazon(request):
+    request.session['site'] = 'Amazon'
+    request.session['coun'] = 1
+    return redirect('/pickup')
+
+def flipkart(request):
+    request.session['site'] = 'Flipkart'
+    request.session['coun'] = 1
+    return redirect('/pickup')

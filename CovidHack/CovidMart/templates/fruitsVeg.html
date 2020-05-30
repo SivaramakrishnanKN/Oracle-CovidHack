@@ -7,7 +7,7 @@
 
     <div class="column">
         <h1>Fruits and Vegetables</h1>
-        <form action="itemForm" method="POST">
+        <form action="/itemForm" method="POST">
             {% csrf_token %}
             {% for item in item_list %}
             <div class="col s3">
