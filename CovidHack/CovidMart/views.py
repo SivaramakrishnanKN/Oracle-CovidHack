@@ -4,10 +4,12 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import CustomerForm
 from .models import Item 
-
+import math
+from .models import Customer, Service
 
 def index(request):
-    return render(request, "index.html")
+    name = request.user.username
+    return render(request, "index.html", {'name':name})
 
 
 def signup(request):
@@ -28,11 +30,47 @@ def map(request):
     return render(request, 'map.html')
 
      
-def Home(request):
+def pickup(request):
     item_list = Item.objects.all()
     items = {}
     count = 0
-    return render(request,'Home.html',{'item_list':item_list})
+    return render(request,'pickup.html',{'item_list':item_list})
+
+def itemForm(request):
+    itemType = str(request.POST.get('type'))
+    user = request.user.username
+    item_list = Item.objects.all().filter(itemType=itemType)
+    
+    itemCount = {}
+    for key in item_list:
+        itemCount[key.itemName] = request.POST.get(key.itemName) 
+        print(key.itemName, request.POST.get(key.itemName))
+
+    customer  = Customer.objects.filter(name=user)
+    # logic
+    shopName = ""
+    slot = 1
+    validShops =  Service.objects.filter(shopType = itemType).filter(zoneID=customer[0].zoneID).filter(numCust__lt=3).order_by('slotID')
+    if(len(validShops) == 0):
+        slot = "Try again later"
+        shopName="No shops found"
+        return render(request, 'output.html', {'name':user, 'shop_name':shopName, 'slot_time':slot, 'itemCount': itemCount})
+    dist = math.inf
+    for shop in validShops:
+        d = math.sqrt((customer[0].lon - shop.lon)**2 + (customer[0].lan - shop.lan)**2)
+        if(dist < d):
+            dist = d
+            shopName = shop.name
+            slot = shop.slotID
+    selectedshop = Service.objects.filter(name=shopName).filter(slot=slot)
+    selectedshop.numCust = selectedshop.numCust + 1
+    return render(request, 'output.html', {'name':user, 'shop_name':shopName, 'slot_time':slot, 'itemCount': itemCount})
+
+def delivery(request):
+    item_list = Item.objects.all()
+    items = {}
+    count = 0
+    return render(request,'delivery.html',{'item_list':item_list})
 
 
 # def manager(request):
@@ -60,6 +98,7 @@ def login_request(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
+
                 #messages.info(request, f"You are now logged in as {username}")
                 return redirect('/')
             else:
@@ -80,3 +119,20 @@ def registerCustomer(request):
     else:
         form = CustomerForm()
     return render(request, 'registration.html',{'form':form})
+
+
+def fruits_and_veg(request):
+    item_list = Item.objects.all().filter(itemType='Fruits')
+    return render(request, 'fruitsVeg.html',{'item_list':item_list})
+
+def dairy(request):
+    item_list = Item.objects.all().filter(itemType='Dairy')
+    return render(request, 'dairy.html',{'item_list':item_list})
+
+def medicine(request):
+    item_list = Item.objects.all().filter(itemType='Medicine')
+    return render(request, 'medicine.html',{'item_list':item_list})
+
+def cereals_and_pulses(request):
+    item_list = Item.objects.all().filter(itemType='Cereals')
+    return render(request, 'cereals.html',{'item_list':item_list})

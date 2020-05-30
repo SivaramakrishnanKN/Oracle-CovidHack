@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="container" align="center">
+
+    <div class="column">
+        <h1>Dairy</h1>
+        <form action="/itemForm" method="POST">
+            {% csrf_token %}
+            {% for item in item_list %}
+            <div class="col s3">
+                <p class="range-field">
+                    <a style="font-size: medium;">{{item.itemName}}</a>
+                    0<input type="range" id="{{item.itemName}}" name="{{item.itemName}}" min="0" max="5" style="width: 100px;"/>5
+                </p>    
+            </div>
+            {% endfor %}
+            <input type="hidden" name="type" value="Dairy">
+            <button type="submit">Submit</button>
+        </form>       
+
+    </div>
+</div>
+{% endblock %}
