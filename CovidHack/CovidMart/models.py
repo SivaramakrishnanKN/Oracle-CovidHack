@@ -3,7 +3,6 @@ from django.db import models
 # Create your models here.
 class Customer(models.Model):
     name = models.TextField()
-    password = models.TextField();
     lat = models.FloatField()
     lon = models.FloatField()
     zone = models.TextField()

@@ -1,5 +1,5 @@
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import CustomerForm
@@ -22,6 +22,9 @@ def signup(request):
         form = UserCreationForm()
     return render(request, 'signup.html', {'form': form})
 
+def map(request):
+    return render(request, 'map.html')
+
 #def Home(request):
      
 
@@ -42,6 +45,32 @@ def signup(request):
 #     # select Amazon/Flipkart/Retailer
 #     # return shop from which delivery will happen
 
+def login_request(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request=request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                #messages.info(request, f"You are now logged in as {username}")
+                return redirect('/')
+            else:
+                pass
+                #messages.error(request, "Invalid username or password.")
+        else:
+            pass
+            #messages.error(request, "Invalid username or password.")
+    form = AuthenticationForm()
+    return render(request, 'login.html',{'form':form})
+
 def registerCustomer(request):
-    form = CustomerForm()
-    render(request, 'registration.html',{'form':form})
+    if request.method == 'POST':
+        form = CustomerForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = CustomerForm()
+    return render(request, 'registration.html',{'form':form})

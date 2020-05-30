@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'CovidMart.apps.CovidmartConfig',
+    'leaflet',
+    'six',
+    'djgeojson',
 ]
 
 MIDDLEWARE = [
