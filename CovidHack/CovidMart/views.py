@@ -3,6 +3,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import CustomerForm
+from .models import Item 
+
 
 def index(request):
     return render(request, "index.html")
@@ -25,8 +27,12 @@ def signup(request):
 def map(request):
     return render(request, 'map.html')
 
-#def Home(request):
      
+def Home(request):
+    item_list = Item.objects.all()
+    items = {}
+    count = 0
+    return render(request,'Home.html',{'item_list':item_list})
 
 
 # def manager(request):

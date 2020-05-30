@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{% load bootstrap4 %}
+
+<html>
+    <head>
+        <title>Items List</title>
+        {% bootstrap_css %}
+        {% bootstrap_javascript jquery='full' %}
+    </head>
+ 
+    <body>
+
+    <form>
+        <select name = "dropdown">
+            {% for item in item_list %}
+            <option value = {{item.itemName}}>{{item.itemName}}</option>
+            {% endfor %}
+        </select>
+     </form>
+
+ 
+    </body>
+</html>
